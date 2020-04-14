@@ -15,7 +15,7 @@ services:
   axed:
     logging:
       driver: none
-    image: axerunners/axed:testnet
+    image: axerunners/axed:latest
     volumes:
       - sentinel-axed-data:/axe
     ports:
