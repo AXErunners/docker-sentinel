@@ -1,0 +1,39 @@
+version: '2'
+
+services:
+  db:
+    image: mysql:5.5.52
+    volumes:
+      - "./.data/db:/var/lib/mysql"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: sentinel
+      MYSQL_DATABASE: sentinel_test
+      MYSQL_USER: sentinel
+      MYSQL_PASSWORD: sentinel
+
+  axed:
+    logging:
+      driver: none
+    image: axerunners/axed:testnet
+    volumes:
+      - sentinel-axed-data:/axe
+    ports:
+      - 19937:19937
+    environment:
+      - RPCPASSWORD=OXpZqidLm7jqYMzgZGKIPiq3Xu9fohBfR0euQHmt6Hk
+
+  sentinel:
+    restart: always
+    image: axerunners/sentinel:latest
+    volumes:
+      - "./conf/axe.conf:/sentinel/.axe/axe.conf"
+    depends_on:
+      - db
+      - axed
+    environment:
+      - DEBUG=false
+      - RPCPASSWORD=OXpZqidLm7jqYMzgZGKIPiq3Xu9fohBfR0euQHmt6Hk
+
+volumes:
+    sentinel-axed-data:  #declare a volume named sentinel-axed-data
